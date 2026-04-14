@@ -74,7 +74,7 @@ Some iMacs do not have a fan, so the fan header may not be necessary depending o
 
 ### Arduino In-circuit Serial Programmer (ISP)
 
-To program the ATmega, you can use an [arduino of some sort to use as a programmer/ISP](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/). You can also use an [ESP8266](https://github.com/vince-br-549/ESP8266-as-ISP), but if you don't already have one laying around, an Arduino UNO would likely be the simplest and best documented option.
+To program the ATmega, you can use an [arduino of some sort as a programmer/ISP](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/). You can also use an [ESP8266](https://github.com/vince-br-549/ESP8266-as-ISP), but if you don't already have one laying around, an Arduino UNO is probably be the simplest and best documented option.
 
 Technically you can remove the chip, place it into an arduino UNO, and program it that way, but the ISP is vastly more convenient and there's less risk of damaging the pins on the ATmega chip.
 
@@ -294,13 +294,15 @@ The display can accept video in these three resolutions/frame rates:
 
 If it isn't receiving one of those, it stays blank. The monitor is supposed to send [EDID signals](https://en.wikipedia.org/wiki/Extended_Display_Identification_Data) to inform the computer of the acceptable resolutions/refresh rates, but sometimes the computer does not understand.
 
-If you do not see any of those resolutions available in your display settings, you can override that and set values not advertised in the EDID signal.
+If you do not see any of those resolutions available in the display settings, you can override that and set values not advertised in the EDID signal.
+
+When the correct settings are selected, an image should appear on the screen. It may be in the wrong place or the wrong colors, but that will be fixed in the next step.
 
 ## Manually specifying display settings on Linux (Xorg)
 
-These steps use the modelines in [the modelines.txt file](https://github.com/qbancoffee/imac_g3_ivad_board_init/blob/master/imac_g3_modelines.txt).
+These commands use the modelines in [the modelines.txt file](https://github.com/qbancoffee/imac_g3_ivad_board_init/blob/master/imac_g3_modelines.txt).
 
-Find the name of the VGA connection in the output of `xrandr`. Mine was `VGA-1`:
+Find the name of the VGA connection in the output of `xrandr`. Mine was `VGA-1`.
 
 Then run these commands to add the modelines. This should make them available to select in the display settings.
 
@@ -319,9 +321,7 @@ Select one of these new modes in your display settings, or run
 xrandr --output VGA-1 --mode 1024x768_75
 ```
 
-An image should appear on the screen. It may be in the wrong place or the wrong colors, but that will be fixed in the next step.
-
-These commands will not persist after you log out. To do that, you will need to edit your xorg.conf or find some other way to load the modelines on startup.
+These xrandr commands will not persist after you log out. To do that, you will need to edit your xorg.conf or find some other way to load the modelines on startup.
 
 ## Windows
 
@@ -333,7 +333,7 @@ These are the settings stored within the actual monitor (brightness, color balan
 
 The J20 board listens for serial data on its Serial RX and Serial TX pins (115200 baud 8N1 UART). Connect a serial to USB adapter/bridge to those pins, and also to ground. TX on one side connects to RX on the other side, and vice versa. 
 
-There is not a ground pin in the serial rx/tx header, but you can use the ground pin from the programming headers, alligator clip it anywhere on the metal chassis, or stick it anywhere else that connects to ground. If it is not connected to a common ground, though, it will not work.
+There is not a ground pin in the serial rx/tx header, but you can use the ground pin from the programming headers, alligator clip it anywhere on the metal chassis, or stick it anywhere else that connects to ground. It must be connected to ground, though, or it will not work.
 
 It may be necessary to install a driver or configure the serial adapter so that it shows up on the computer. On Linux you may have to set up a udev rule.
 
