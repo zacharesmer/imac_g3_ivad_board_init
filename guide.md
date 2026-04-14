@@ -1,20 +1,22 @@
-# Determine compatibility
+# Compatibility
 
-This project works on slot-loading iMac G3s. The earlier tray-loading models have a different video connector, and there is a different (simpler) process to use one of those as a monitor.
+This project should work on slot-loading iMac G3s. The earlier tray-loading models have a different video connector, and there is a different (simpler) process to use one of those as a monitor.
 
-This guide is for installing 3 circuit boards, and using an Arduino (ATmega 328) so the iMac can be used as a monitor for any VGA output. If you want to install a raspberry pi or other computer in the iMac, there are other more relevant resources in the repository.
+This guide is for installing 3 circuit boards, and using an Arduino (ATmega 328) so the iMac can be used as a monitor for any VGA output. If you want to install a raspberry pi in the iMac, it is not necessary to use the Arduino. There are other resources in this repository showing how to set that up.
 
 # Ordering parts
 
 ## Printed Circuit Boards (PCBs)
 
-To order PCBs, upload a zip file of the design (in Gerber format) to the PCB manufacturer of your choice. There are many options, such as JLC PCB, OSH Park, and PCBWay. These zip files ready to upload:
+To order PCBs, upload a zip file of the design (in Gerber format) to the PCB manufacturer of your choice. There are many options, such as JLC PCB, OSH Park, and PCBWay. These zip files are ready to upload:
 
 [J20 board gerbers zip](https://github.com/qbancoffee/imac_g3_ivad_board_init/blob/master/schematics_and_pcbs/imac_g3_333mhz_slot_loading_J20_adapter_board/gerbers/imac_g3_333mhz_slot_loading_J20_adapter_board.zip)
+
 [J22 board gerbers zip](https://github.com/qbancoffee/imac_g3_ivad_board_init/blob/master/schematics_and_pcbs/imac_g3_slot_loading_J22_adapter_board/gerber/imac_g3_slot_loading_J22_adapter_board.zip)
+
 [Down converter board gerbers zip](https://github.com/qbancoffee/imac_g3_ivad_board_init/blob/master/schematics_and_pcbs/imac_g3_down_converter_board_adapter/gerber/imac_g3_down_converter_board_adapter.zip)
 
-Since the design uses large through-hole parts, paying to have the board manufactured would likely be more expensive than it's worth. Fortunately, for that same reason, it is a straightforward soldering project, even for a beginner.
+Since the design uses large through-hole parts, paying to have the board manufactured would likely be more expensive than it's worth. Fortunately, for that same reason, it is a straightforward soldering project for any skill level.
 
 Also note that the J20 board has undergone a major revision, so there are two versions of it in pictures. The newer version has only one ATmega chip and the VGA port is at an angle.
 
@@ -64,17 +66,17 @@ R1 and R2 are for the indicator LEDs.
 
 It may be worth it to shop around for compatible alternatives to the big Molex Micro-Fit connector, since the price and stock seem to fluctuate, and the difference can be $5-10. Amphenol's version is called MiniTek Pwr and it looks like it should be compatible with the connector in the Mac. It may be necessary to bend some structural supports to fit it on the PCB.
 
-Some iMacs do not have a fan, so the fan header may not be necessary unless you're adding a fan.
+Some iMacs do not have a fan, so the fan header may not be necessary depending on your plans.
 
 ## Other stuff
 
 ### Arduino In-circuit Serial Programmer (ISP)
 
-To program the ATmega, you'll need an [arduino of some sort to use as a programmer/ISP](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/). You can also use an [ESP8266](https://github.com/vince-br-549/ESP8266-as-ISP), but if you don't already have one laying around, an Arduino UNO would likely be the simplest and best documented option.
+To program the ATmega, you can use an [arduino of some sort to use as a programmer/ISP](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/). You can also use an [ESP8266](https://github.com/vince-br-549/ESP8266-as-ISP), but if you don't already have one laying around, an Arduino UNO would likely be the simplest and best documented option.
 
 Technically you can remove the chip, place it into an arduino UNO, and program it that way, but the ISP is vastly more convenient and there's less risk of damaging the pins on the ATmega chip.
 
-### A USB serial bridge
+### USB serial bridge
 
 You will also need something that can be used as a serial to USB bridge. Pretty much any microcontroller dev board (arduino, raspberry pi pico, ESP32, etc.) or a dedicated TTL converter will work. In theory you could reuse the programmer arduino, but it will make life a _lot_ easier if this is a separate device so that you can switch back and forth easily.
 
@@ -109,7 +111,7 @@ There is a [helpful video showing the complete process of assembling the imac](h
 
 ## Boards
 
-The screw hole that attach the boards to the metal chassis are the ground point, so make sure they are snugly connected.
+The screw holes that attach the boards to the metal chassis are the ground points, so make sure they are fully connected.
 
 ### J20 board
 
@@ -165,17 +167,17 @@ _Note: If you plan to put a Raspberry pi in the computer anyway, you can skip th
 
 ## IDE setup
 
-Install the Arduino IDE [from the Arduino website](https://www.arduino.cc/en/software/).
+Install and open the Arduino IDE [from the Arduino website](https://www.arduino.cc/en/software/).
 
 Note: if you are using the Linux AppImage, you may have to run the AppImage file with the `--no-sandbox` argument.
 
 ## Installing libraries
 
-Install [SoftwareWire](https://github.com/Testato/SoftwareWire) and [EEPROMWearLevel](https://github.com/PRosenb/EEPROMWearLevel) from the Arduino IDE library manager.
+Install [SoftwareWire](https://github.com/Testato/SoftwareWire) and [EEPROMWearLevel](https://github.com/PRosenb/EEPROMWearLevel) from the Arduino IDE's library manager.
 
 ## Installing the ATmega328 board package
 
-Install MiniCore [using the instructions from the Minicore repository](https://github.com/mcudude/minicore?tab=readme-ov-file#how-to-install). This is what allows selecting the ATmega 328 as a board in the Arduino IDE.
+Install MiniCore [using the instructions from the Minicore repository](https://github.com/mcudude/minicore?tab=readme-ov-file#how-to-install). This adds the option to select the ATmega 328 as a board in the Arduino IDE.
 
 ## Modifying the Wire library
 
@@ -200,7 +202,7 @@ On Ubuntu running the IDE as an AppImage, the path to the arduino install folder
 
 ## Programmer setup
 
-If you are using an arduino as an ISP, follow [these instructions to get it set up.](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/)
+If you are using an arduino as an ISP, follow [these instructions to get it ready to be an ISP.](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/)
 
 In short:
 
@@ -259,9 +261,10 @@ More specifically:
 
 - If you have an iMac with a white LED, try connecting the Power LED cable to the slot labelled "amber LED" instead of the one labeled "green LED".
 
-### The CRT doesn't make any sounds whatsoever
+### The LED is on but the CRT doesn't make any sounds whatsoever
 
-- If the LED is on, then the power has been switched on and the ATmega chip is doing something. Try checking your soldering and other connections. Try connecting to the ATmega via serial and seeing if it prints status information when you type "p".
+- If the LED is on, then the power has been switched on and the ATmega chip is doing something. Try checking the soldering and other connections.
+- Try connecting to the ATmega via serial and seeing if it prints status information when you type "p".
 
 ### The CRT crackles, but it doesn't go "doink" and there's no image displayed
 
@@ -283,13 +286,13 @@ More specifically:
 
 The display can accept video in these three resolutions/frame rates:
 
-1024x768 @ 75 Hz
-800x600 @ 95 Hz
-640x480 @ 117 Hz
+- 1024x768 @ 75 Hz
+- 800x600 @ 95 Hz
+- 640x480 @ 117 Hz
 
-If it isn't receiving one of those, it stays blank. The monitor is supposed to send [EDID signals](https://en.wikipedia.org/wiki/Extended_Display_Identification_Data) to inform the computer of the acceptable resolutions/refresh rates, but this may not work.
+If it isn't receiving one of those, it stays blank. The monitor is supposed to send [EDID signals](https://en.wikipedia.org/wiki/Extended_Display_Identification_Data) to inform the computer of the acceptable resolutions/refresh rates, but sometimes the computer does not understand.
 
-If you do not see any of those resolutions available in your display settings, you can override that and specify values not advertised in the EDID signal.
+If you do not see any of those resolutions available in your display settings, you can override that and set values not advertised in the EDID signal.
 
 ## Manually specifying display settings on Linux (Xorg)
 
@@ -326,15 +329,19 @@ TODO, please share if you've done this!
 
 These are the settings stored within the actual monitor (brightness, color balance, etc.). 
 
-The J20 board listens for serial data on its Serial RX and Serial TX pins (115200 baud 8N1 UART). Connect a serial to USB adapter/bridge to those pins, and also to ground. There is not a pin in that group of 6 for ground, but you can use the ground pin from the programming headers, alligator clip it anywhere on the metal chassis, or use the top part of the ground pin on the large connector if you used a long enough header pin.
+The J20 board listens for serial data on its Serial RX and Serial TX pins (115200 baud 8N1 UART). Connect a serial to USB adapter/bridge to those pins, and also to ground. TX on one side connects to RX on the other side, and vice versa. 
 
-You may need to install a driver or configure the serial adapter so that it shows up on your computer. On Linux you may have to set up a udev rule for whatever bridge you're using.
+There is not a ground pin in the serial rx/tx header, but you can use the ground pin from the programming headers, alligator clip it anywhere on the metal chassis, or stick it anywhere else that connects to ground. If it is not connected to a common ground, though, it will not work.
+
+It may be necessary to install a driver or configure the serial adapter so that it shows up on the computer. On Linux you may have to set up a udev rule.
 
 There is [GUI app available](https://github.com/qbancoffee/imac_g3_ivad_board_init/tree/master/ImacG3DVDisplayProperties) to adjust the settings. [Video of it in use](https://www.youtube.com/watch?v=zrzcvThxDeY).
 
-You can also send commands directly using a program like PuTTY or Minicom. To test your connection, typing the letter "p" should print out some information. Note that the device can't be in use at the same time by the GUI app and by PuTTY/minicom, so close one before trying to use the other.
+You can also send commands directly using a program like PuTTY or Minicom. To test your connection, typing the letter "p" should print out some information. Note that the device can't be in use at the same time by the GUI app and by PuTTY/minicom, so close one before trying to use the other. What each key does is in a comment in the Arduino code.
 
-This is an [alternate version of the sketch](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/arduino-things/imacG3IvadInit/imacG3IvadInit.ino) that is more ergonomic for keyboard use, but it is not compatible with the GUI app. It also includes some changes to slow down the transmission of the init sequence.
+This is an [alternate version of the sketch](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/arduino-things/imacG3IvadInit/imacG3IvadInit.ino) that is more ergonomic for keyboard use, but it is not compatible with the GUI app. 
+
+Anytime you re-upload the Arduino code, the stored settings will be erased. Otherwise, they should persist across power cycles.
 
 # More information
 
