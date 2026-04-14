@@ -228,31 +228,8 @@ void loop() {
 
 void handleSerial(char incoming) {
   /*
-     a = move left
-     d = move right
-     w = move up
-     s = move down
-
-     _ = skinnier
-     + = fatter
-     = = taller
-     - = shorter
-
-     j = contrast down
-     k = contrast up
-
-     h = brightness down
-     l = brightness up
-
-     r = less red
-     R = more red
-     g = less green
-     G = more green
-     b = less blue
-     B = more blue
-
+  Type ? for controls help
   */
-
 
   //if (Serial.available() > 0) {
   // char incoming = Serial.read();
@@ -296,24 +273,33 @@ void handleSerial(char incoming) {
       index = IVAD_SETTING_HEIGHT;
       increment = false;
       break;
-    case 'j'://decrease contrast
+    case '<'://decrease contrast
       //changeContrast(-1);
       index = IVAD_SETTING_CONTRAST;
       increment = false;
       break;
-    case 'k'://increase contrast
+    case '>'://increase contrast
       //changeContrast(+1);
       index = IVAD_SETTING_CONTRAST;
       break;
-    case 'h'://decrease brightness
+    case '['://decrease brightness
       //changeBrightness(-1);
       index = IVAD_SETTING_BRIGHTNESS;
       increment = false;
       break;
-    case 'l'://increase brightness
+    case ']'://increase brightness
       // changeBrightness(+1);
       index = IVAD_SETTING_BRIGHTNESS;
       break;
+    // case '{'://decrease brightness drive
+    //   //changeBrightness(-1);
+    //   index = IVAD_SETTING_BRIGHTNESS_DRIVE;
+    //   increment = false;
+    //   break;
+    // case '}'://increase brightness drive
+    //   // changeBrightness(+1);
+    //   index = IVAD_SETTING_BRIGHTNESS_DRIVE;
+    //   break;
     case '1'://tilt paralellogram left
       //changeParallelogram(+1);
       index = IVAD_SETTING_PARALLELOGRAM;
@@ -378,10 +364,62 @@ void handleSerial(char incoming) {
     case 'B':
       index =  IVAD_SETTING_BLUE_DRIVE;
       break;
+    case 'X': // reload settings from eeprom
+      settings_load();
+      ivad_write_settings();
+      break;
     case 'o'://power off
       if ( externalCircuitState == HIGH ) {
         externalCircuitOff();
       }//end if
+      break;
+    case '?':
+      Serial.println(F("----------------------------"));
+      Serial.println(F("|        Controls          |"));
+      Serial.println(F("----------------------------"));
+      Serial.println("    w = move up");
+      Serial.println("    a = move left");
+      Serial.println("    s = move down");
+      Serial.println("    d = move right");
+      Serial.println("");
+      Serial.println("    _ = skinnier");
+      Serial.println("    + = fatter");
+      Serial.println("    = = taller");
+      Serial.println("    - = shorter");
+      Serial.println("");
+      Serial.println("    < = contrast down");
+      Serial.println("    > = contrast up");
+      Serial.println("");
+      Serial.println("    [ = brightness down");
+      Serial.println("    ] = brightness up");
+      // Serial.println("");
+      // Serial.println("    { = brightness drive down");
+      // Serial.println("    } = brightness drive up");
+      Serial.println("");
+      Serial.println("    r = less red");
+      Serial.println("    R = more red");
+      Serial.println("    g = less green");
+      Serial.println("    G = more green");
+      Serial.println("    b = less blue");
+      Serial.println("    B = more blue");
+      Serial.println("");
+      Serial.println("");
+      Serial.println("    1 = Parallelogram left");
+      Serial.println("    2 = Parallelogram right");
+      Serial.println("    3 = Keystone pinch top");
+      Serial.println("    4 = Keystone pinch bottom");
+      Serial.println("    5 = Rotate left");
+      Serial.println("    6 = Rotate right");
+      Serial.println("    7 = Pincushion pull corners out");
+      Serial.println("    8 = Pincushion pull corners in");
+      Serial.println("");
+      Serial.println("    p = Print current settings");
+      Serial.println("    q = Save current settings");
+      Serial.println("");
+      Serial.println("    o = Turn off display");
+      Serial.println("");
+      Serial.println("    ? = Print controls");
+      Serial.println(F("----------------------------"));
       break;
   }
   //}
@@ -397,8 +435,6 @@ void handleSerial(char incoming) {
       result = ivad_decrement_setting(index);
     }
     Serial.println(result, HEX);
-
-    // ivad_change_setting(index, val);
   }//end if
 
 
@@ -406,43 +442,46 @@ void handleSerial(char incoming) {
 
 void printCurrentSettings() {
   Serial.println(F("----------------------------"));
-
-  Serial.print(F("heightValueIndex: "));
-  Serial.println(heightValueIndex, HEX);
-
-  Serial.print(F("widthValueIndex: "));
-  Serial.println(widthValueIndex, HEX);
-
-  Serial.println("");
-
-  Serial.print(F("verticalPositionValueIndex: "));
-  Serial.println(verticalPositionValueIndex, HEX);
-
-  Serial.print(F("horizontalPositionValueIndex: "));
-  Serial.println(horizontalPositionValueIndex, HEX);
-
-  Serial.println(F(""));
-
-  Serial.print(F("rotationValueIndex: "));
-  Serial.println(rotationValueIndex, HEX);
-
-  Serial.print(F("parallelogramValueIndex: "));
-  Serial.println(parallelogramValueIndex, HEX);
-
-  Serial.print(F("keystoneValueIndex: "));
-  Serial.println(keystoneValueIndex, HEX);
-
-  Serial.print(F("pincushionValueIndex: "));
-  Serial.println(pincushionValueIndex, HEX);
-
-  Serial.println("");
-
-  Serial.print(F("contrastValueIndex: "));
-  Serial.println(contrastValueIndex, HEX);
-
-  Serial.print(F("brightnessValueIndex: "));
-  Serial.println(brightnessValueIndex, HEX);
-
+  Serial.println(F("|     Current settings     |"));
+  Serial.println(F("----------------------------"));
+  Serial.print(F("Contrast: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_CONTRAST], HEX);           // = 0x00    0XB5 - 0XFF
+  Serial.print(F("Red drive: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_RED_DRIVE], HEX);          // = 0x01    0X00 - 0XFF
+  Serial.print(F("Green drive: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_GREEN_DRIVE], HEX);        // = 0x02    0X00 - 0XFF
+  Serial.print(F("Blue drive: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_BLUE_DRIVE], HEX);         // = 0x03    0X00 - 0XFF
+  Serial.print(F("Red cutoff: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_RED_CUTOFF], HEX);         // = 0x04    0X00 - 0XFF
+  Serial.print(F("Green cutoff: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_GREEN_CUTOFF], HEX);       // = 0x05    0X00 - 0XFF
+  Serial.print(F("Blue cutoff: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_BLUE_CUTOFF], HEX);        // = 0x06    0X00 - 0XFF
+  Serial.print(F("Horizontal position: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_HORIZONTAL_POS], HEX);     // = 0x07    0X80 - 0XFF
+  Serial.print(F("Height: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_HEIGHT], HEX);             // = 0x08    0X80 - 0XFF
+  Serial.print(F("Vertical position: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_VERTICAL_POS], HEX);       // = 0x09    0X00 - 0X7F
+  Serial.print(F("S Correction: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_S_CORRECTION], HEX);       // = 0x0A    0X80 - 0XFF
+  Serial.print(F("Keystone: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_KEYSTONE], HEX);           // = 0x0B    0X80 - 0XFF
+  Serial.print(F("Pincushion: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_PINCUSHION], HEX);         // = 0x0C    0X80 - 0XFF
+  Serial.print(F("Width: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_WIDTH], HEX);              // = 0x0D    0X00 - 0X7F
+  Serial.print(F("Pincushion balance: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_PINCUSHION_BALANCE], HEX); // = 0x0E    0X80 - 0XFF
+  Serial.print(F("Parallelogram: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_PARALLELOGRAM], HEX);      // = 0x0F    0X80 - 0XFF
+  Serial.print(F("Brightness drive: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_BRIGHTNESS_DRIVE], HEX);   // = 0x10
+  Serial.print(F("Brightness: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_BRIGHTNESS], HEX);         // = 0x11    0X00 - 0X0A
+  Serial.print(F("Rotation: "));
+  Serial.println(CURRENT_CONFIG[IVAD_SETTING_ROTATION], HEX);           // = 0x12    0X00 - 0X7F
   Serial.println(F("----------------------------"));
 
 }
@@ -540,130 +579,141 @@ void initIvadBoard() {
       writeToIvad(0x46,0x00,0x00);
       writeToIvad(0x46,0x08,0xe4);
       writeToIvad(0x46,0x12,0xc9);
-      // writeToIvad(0x53,0x00);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x0a);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x14);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x1e);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x28);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x32);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x3c);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x46);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x50);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x5a);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x46,0x01,0x82);
-      // writeToIvad(0x46,0x02,0x82);
-      // writeToIvad(0x46,0x03,0x82);
-      // writeToIvad(0x46,0x04,0xa0);
-      // writeToIvad(0x46,0x05,0xa0);
-      // writeToIvad(0x46,0x06,0xa0);
-      // writeToIvad(0x46,0x07,0xad);
-      // writeToIvad(0x46,0x08,0xe4);
-      // writeToIvad(0x46,0x09,0x3d);
-      // writeToIvad(0x46,0x0a,0x9e);
-      // writeToIvad(0x46,0x0b,0xb4);
-      // writeToIvad(0x46,0x0c,0xc4);
-      // writeToIvad(0x46,0x0d,0x27);
-      // writeToIvad(0x46,0x0e,0xbf);
-      // writeToIvad(0x46,0x0f,0xc0);
-      // writeToIvad(0x46,0x10,0x40);
-      // writeToIvad(0x46,0x11,0x0a);
-      // writeToIvad(0x46,0x12,0x5b);
-      // writeToIvad(0x46,0x00,0xff);
-      // writeToIvad(0x53,0x00);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x10);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x20);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x53,0x30);
-      // readFromIvad(0x53,10);
-      // writeToIvad(0x46,0x11,0x05);
-      // writeToIvad(0x46,0x00,0xff);
-      // writeToIvad(0x46,0x00,0x00);
-      // writeToIvad(0x46,0x07,0xb1);
-      // writeToIvad(0x46,0x0d,0x10);
-      // writeToIvad(0x46,0x0c,0xc7);
-      // writeToIvad(0x46,0x09,0x4a);
-      // writeToIvad(0x46,0x08,0xea);
-      // writeToIvad(0x46,0x0f,0xc0);
-      // writeToIvad(0x46,0x0b,0xae);
-      // writeToIvad(0x46,0x12,0x5b);
-      // writeToIvad(0x46,0x00,0xff);
-      // writeToIvad(0x46,0x11,0x05);
-      // writeToIvad(0x46,0x00,0xff);
-      // writeToIvad(0x46,0x10,0x40);
-      // writeToIvad(0x46,0x06,0xa0);
-      // writeToIvad(0x46,0x05,0xa0);
-      // writeToIvad(0x46,0x04,0xa0);
-      // writeToIvad(0x46,0x03,0x82);
-      // writeToIvad(0x46,0x02,0x82);
-      // writeToIvad(0x46,0x01,0x82);
-      // writeToIvad(0x46,0x11,0x05);
-      // writeToIvad(0x46,0x00,0xff);
-      // writeToIvad(0x46,0x11,0x05);
-      // writeToIvad(0x46,0x00,0xff);
-      // writeToIvad(0x46,0x10,0x40);
-      // writeToIvad(0x46,0x06,0xa0);
-      // writeToIvad(0x46,0x05,0xa0);
-      // writeToIvad(0x46,0x04,0xa0);
-      // writeToIvad(0x46,0x03,0x82);
-      // writeToIvad(0x46,0x02,0x82);
-      // writeToIvad(0x46,0x01,0x82);
-      // writeToIvad(0x46,0x11,0x05);
-      // writeToIvad(0x46,0x00,0xff);
+      writeToIvad(0x53,0x00);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x0a);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x14);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x1e);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x28);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x32);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x3c);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x46);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x50);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x5a);
+      readFromIvad(0x53,10);
+      writeToIvad(0x46,0x01,0x82);
+      writeToIvad(0x46,0x02,0x82);
+      writeToIvad(0x46,0x03,0x82);
+      writeToIvad(0x46,0x04,0xa0);
+      writeToIvad(0x46,0x05,0xa0);
+      writeToIvad(0x46,0x06,0xa0);
+      writeToIvad(0x46,0x07,0xad);
+      writeToIvad(0x46,0x08,0xe4);
+      writeToIvad(0x46,0x09,0x3d);
+      writeToIvad(0x46,0x0a,0x9e);
+      writeToIvad(0x46,0x0b,0xb4);
+      writeToIvad(0x46,0x0c,0xc4);
+      writeToIvad(0x46,0x0d,0x27);
+      writeToIvad(0x46,0x0e,0xbf);
+      writeToIvad(0x46,0x0f,0xc0);
+      writeToIvad(0x46,0x10,0x40);
+      writeToIvad(0x46,0x11,0x0a);
+      writeToIvad(0x46,0x12,0x5b);
+      writeToIvad(0x46,0x00,0xff);
+      writeToIvad(0x53,0x00);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x10);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x20);
+      readFromIvad(0x53,10);
+      writeToIvad(0x53,0x30);
+      readFromIvad(0x53,10);
+      writeToIvad(0x46,0x11,0x05);
+      writeToIvad(0x46,0x00,0xff);
+      writeToIvad(0x46,0x00,0x00);
+      writeToIvad(0x46,0x07,0xb1);
+      writeToIvad(0x46,0x0d,0x10);
+      writeToIvad(0x46,0x0c,0xc7);
+      writeToIvad(0x46,0x09,0x4a);
+      writeToIvad(0x46,0x08,0xea);
+      writeToIvad(0x46,0x0f,0xc0);
+      writeToIvad(0x46,0x0b,0xae);
+      writeToIvad(0x46,0x12,0x5b);
+      writeToIvad(0x46,0x00,0xff);
+      writeToIvad(0x46,0x11,0x05);
+      writeToIvad(0x46,0x00,0xff);
+      writeToIvad(0x46,0x10,0x40);
+      writeToIvad(0x46,0x06,0xa0);
+      writeToIvad(0x46,0x05,0xa0);
+      writeToIvad(0x46,0x04,0xa0);
+      writeToIvad(0x46,0x03,0x82);
+      writeToIvad(0x46,0x02,0x82);
+      writeToIvad(0x46,0x01,0x82);
+      writeToIvad(0x46,0x11,0x05);
+      writeToIvad(0x46,0x00,0xff);
+      writeToIvad(0x46,0x11,0x05);
+      writeToIvad(0x46,0x00,0xff);
+      writeToIvad(0x46,0x10,0x40);
+      writeToIvad(0x46,0x06,0xa0);
+      writeToIvad(0x46,0x05,0xa0);
+      writeToIvad(0x46,0x04,0xa0);
+      writeToIvad(0x46,0x03,0x82);
+      writeToIvad(0x46,0x02,0x82);
+      writeToIvad(0x46,0x01,0x82);
+      writeToIvad(0x46,0x11,0x05);
+      writeToIvad(0x46,0x00,0xff);
 
 
-  // my very own bespoke init code recorded from a 600MHz imac 
-  writeToIvad(0x53, 0x00);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x0A);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x14);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x1E);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x28);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x32);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x3C);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x46);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x50);
-  readFromIvad(0x53, 10);
-  writeToIvad(0x53, 0x5A);
-  readFromIvad(0x53, 2);
-  // Marker A
-  writeToIvad(0x46, 0x01, 0x89);
-  writeToIvad(0x46, 0x02, 0x88);
-  writeToIvad(0x46, 0x03, 0x84);
-  writeToIvad(0x46, 0x04, 0x52);
-  writeToIvad(0x46, 0x05, 0x63);
-  writeToIvad(0x46, 0x06, 0x54);
-  writeToIvad(0x46, 0x07, 0xAE);
-  writeToIvad(0x46, 0x08, 0xEC);
-  writeToIvad(0x46, 0x09, 0x44);
-  writeToIvad(0x46, 0x0A, 0x9E);
-  writeToIvad(0x46, 0x0B, 0x9E);
-  writeToIvad(0x46, 0x0C, 0xCF);
-  writeToIvad(0x46, 0x0D, 0x25);
-  writeToIvad(0x46, 0x0E, 0xBE);
-  writeToIvad(0x46, 0x0F, 0xD3);
-  writeToIvad(0x46, 0x10, 0x40);
-  writeToIvad(0x46, 0x11, 0x05);
-  writeToIvad(0x46, 0x12, 0x42);
-  writeToIvad(0x46, 0x00, 0xFF);
+  // // my very own bespoke init code recorded from a 600MHz imac (plus this first bit that it doesn't work without)
+  // writeToIvad( 0x46,0x13,0x00);
+  // writeToIvad(0x46,0x13,0x00);
+  // readFromIvad(0x46,1);
+  // writeToIvad(0x46,0x09,0x00);
+  // writeToIvad(0x53,0x33);
+  // readFromIvad(0x53,1);
+  // writeToIvad(0x46,0x13,0x0b);
+  // writeToIvad(0x46,0x00,0x00);
+  // writeToIvad(0x46,0x08,0xe4);
+  // writeToIvad(0x46,0x12,0xc9);
+
+  // writeToIvad(0x53, 0x00);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x0A);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x14);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x1E);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x28);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x32);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x3C);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x46);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x50);
+  // readFromIvad(0x53, 10);
+  // writeToIvad(0x53, 0x5A);
+  // readFromIvad(0x53, 2);
+  // // Marker A
+  // writeToIvad(0x46, 0x01, 0x89);
+  // writeToIvad(0x46, 0x02, 0x88);
+  // writeToIvad(0x46, 0x03, 0x84);
+  // writeToIvad(0x46, 0x04, 0x52);
+  // writeToIvad(0x46, 0x05, 0x63);
+  // writeToIvad(0x46, 0x06, 0x54);
+  // writeToIvad(0x46, 0x07, 0xAE);
+  // writeToIvad(0x46, 0x08, 0xEC);
+  // writeToIvad(0x46, 0x09, 0x44);
+  // writeToIvad(0x46, 0x0A, 0x9E);
+  // writeToIvad(0x46, 0x0B, 0x9E);
+  // writeToIvad(0x46, 0x0C, 0xCF);
+  // writeToIvad(0x46, 0x0D, 0x25);
+  // writeToIvad(0x46, 0x0E, 0xBE);
+  // writeToIvad(0x46, 0x0F, 0xD3);
+  // writeToIvad(0x46, 0x10, 0x40);
+  // writeToIvad(0x46, 0x11, 0x05);
+  // writeToIvad(0x46, 0x12, 0x42);
+  // writeToIvad(0x46, 0x00, 0xFF);
 }
 
 
@@ -685,8 +735,6 @@ void externalCircuitOn() {
   solid_state_relayOn();
   delay(1000);
   initIvadBoard();
-  // delay(400);
-  // initIvadBoard();
   settings_load();
   ivad_write_settings();
   externalCircuitState = HIGH;
@@ -919,8 +967,6 @@ void settings_load()
   {
     //settings_reset_default();
     settings_store();
-
-
   }
 
 
