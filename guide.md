@@ -237,9 +237,9 @@ If you don't get any errors, then the board should be programmed and ready to go
 
 # Smoke test
 
-### If this doesn't immediately work, don't panic. There are some settings that may still need to be adjusted.
-
 The boards are installed, wires are connected, and the ATmega is programmed. If all has gone well (and if you're a little lucky), after pressing the power button, the monitor should power on and display an image.
+
+### If this doesn't immediately work, don't panic. There are some settings that may still need to be adjusted.
 
 More specifically:
 
