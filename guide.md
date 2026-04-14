@@ -271,7 +271,7 @@ More specifically:
 ### The CRT crackles, but it doesn't go "doink" and there's no image displayed
 
 - This may be okay. Try adjusting the output settings on the computer and see if something shows up.
-- This problem initially happened with a 600 MHz iMac DV. It eventually worked with the default initialization code after turning down the transmission speed. [The code for that is available here, along with some other changes](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/arduino-things/imacG3IvadInit/imacG3IvadInit.ino). The part that sets the speed slower is adding `softWire.setClock(50000);` somwhere before `softWire.begin();`. For that mac I also added some delays to more closely match a recording of the original logic board.
+- This problem initially happened with a 600 MHz iMac DV. It eventually worked with the default initialization code after turning down the transmission speed. [The code for that is available here, along with some other changes](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/master/imacG3IvadInit/imacG3IvadInit.ino). The part that sets the speed slower is adding `softWire.setClock(50000);` somewhere before `softWire.begin();`. For that mac I also added some delays to more closely match a recording of the original logic board.
 - The initialization sequence may be incompatible with your computer. There is a second one commented out in the Arduino sketch that you can try, or you can record your own logic board's init sequence with a logic analyzer. This is unlikely to be the case, but trying it may help reveal the actual problem. 
 
 ### The CRT sounds like it turns on for a moment, then turns back off
@@ -341,13 +341,13 @@ There is [GUI app available](https://github.com/qbancoffee/imac_g3_ivad_board_in
 
 You can also send commands directly using a program like PuTTY or Minicom. To test your connection, typing the letter "p" should print out some information. Note that the device can't be in use at the same time by the GUI app and by PuTTY/minicom, so close one before trying to use the other. What each key does is in a comment in the Arduino code.
 
-This is an [alternate version of the sketch](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/arduino-things/imacG3IvadInit/imacG3IvadInit.ino) that is more ergonomic for keyboard use, but it is not compatible with the GUI app. (Type ? in this version for help)
+This is an [alternate version of the sketch](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/master/imacG3IvadInit/imacG3IvadInit.ino) that is more ergonomic for keyboard use, but it is not compatible with the GUI app. (Type ? in this version for help)
 
 Note that anytime you re-upload the Arduino code, the stored settings will be erased. Otherwise, once saved to the EEPROM they should persist across power cycles.
 
 # More information
 
-There is a lot more information and detail in the [GitHub repository](https://github.com/qbancoffee/imac_g3_ivad_board_init). There is a [wiki page about the whole process](https://github.com/qbancoffee/imac_g3_ivad_board_init/wiki/Convert-and-iMac-G3-slot-loader-into-a-standard-VGA-monitor#additional-items-you-might-need-in-order-to-add-an-sbc-andor-audio-amplifier), more pictures, links to various videos and other related work.
+There is a lot more information and detail in the rest of the [GitHub repository](https://github.com/qbancoffee/imac_g3_ivad_board_init). There is a [wiki page about more of the reverse engineering process](https://github.com/qbancoffee/imac_g3_ivad_board_init/wiki/Convert-and-iMac-G3-slot-loader-into-a-standard-VGA-monitor#additional-items-you-might-need-in-order-to-add-an-sbc-andor-audio-amplifier), more pictures, links to various videos and other related work.
 
 There is also [the original MacRumors forum thread](https://forums.macrumors.com/threads/imac-g3-mod-video-connector.1712095/) that is a great timeline of the discoveries and the process.
 
