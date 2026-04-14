@@ -204,7 +204,7 @@ On Ubuntu running the IDE as an AppImage, the path to the arduino install folder
 
 ## Programmer setup
 
-If you are using an arduino as an ISP, follow [these instructions to get it ready to be an ISP.](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/)
+If you are using an arduino as an ISP, follow [these instructions to get it ready.](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP/)
 
 In short:
 
@@ -237,7 +237,7 @@ If you don't get any errors, then the board should be programmed and ready to go
 
 # Smoke test
 
-The boards are installed, wires are connected, and the ATmega is programmed. If all has gone well (and if you're a little lucky), after pressing the power button, the monitor should power on and display an image.
+The boards are installed, wires are connected, and the ATmega is programmed. If all has gone well, after pressing the power button, the monitor should power on and display an image.
 
 ### If this doesn't immediately work, don't panic. There are some settings that may still need to be adjusted.
 
