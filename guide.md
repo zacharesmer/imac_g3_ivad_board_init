@@ -237,7 +237,7 @@ If you don't get any errors, then the board should be programmed and ready to go
 
 ### If this doesn't immediately work, don't panic. There are some settings that may still need to be adjusted.
 
-The boards are installed, wires are connected, and the ATmega is programmed. If all has gone well (and you're a little lucky), after pressing the power button, the monitor should power on and display an image.
+The boards are installed, wires are connected, and the ATmega is programmed. If all has gone well (and if you're a little lucky), after pressing the power button, the monitor should power on and display an image.
 
 More specifically:
 
@@ -339,9 +339,9 @@ There is [GUI app available](https://github.com/qbancoffee/imac_g3_ivad_board_in
 
 You can also send commands directly using a program like PuTTY or Minicom. To test your connection, typing the letter "p" should print out some information. Note that the device can't be in use at the same time by the GUI app and by PuTTY/minicom, so close one before trying to use the other. What each key does is in a comment in the Arduino code.
 
-This is an [alternate version of the sketch](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/arduino-things/imacG3IvadInit/imacG3IvadInit.ino) that is more ergonomic for keyboard use, but it is not compatible with the GUI app. 
+This is an [alternate version of the sketch](https://github.com/zacharesmer/imac_g3_ivad_board_init/blob/arduino-things/imacG3IvadInit/imacG3IvadInit.ino) that is more ergonomic for keyboard use, but it is not compatible with the GUI app. (Type ? in this version for help)
 
-Anytime you re-upload the Arduino code, the stored settings will be erased. Otherwise, they should persist across power cycles.
+Note that anytime you re-upload the Arduino code, the stored settings will be erased. Otherwise, once saved to the EEPROM they should persist across power cycles.
 
 # More information
 
