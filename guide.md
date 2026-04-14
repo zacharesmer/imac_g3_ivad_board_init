@@ -109,7 +109,7 @@ Stop taking things apart when it looks like this (plus or minus some speakers):
 
 # Assembly
 
-There is a [helpful video showing the complete process of assembling the imac](https://github.com/qbancoffee/imac_g3_ivad_board_init/wiki/Convert-and-iMac-G3-slot-loader-into-a-standard-VGA-monitor).
+There is a [video showing the complete process of assembling the imac](https://github.com/qbancoffee/imac_g3_ivad_board_init/wiki/Convert-and-iMac-G3-slot-loader-into-a-standard-VGA-monitor).
 
 ## Boards
 
