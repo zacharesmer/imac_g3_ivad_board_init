@@ -24,7 +24,7 @@ Also note that the J20 board has undergone a major revision, so there are two ve
 
 ## Components
 
-_Tip: Get at least two of everything! If something goes wrong, it is really frustrating to have to wait for new parts to arrive._
+_Tip: Get at least two of everything! If something goes wrong, you will be glad to have extras._
 
 There is a BOM provided for each of the three boards with DigiKey part numbers, ready to upload and order. A couple of parts may be obsolete or out of stock, in which case you'll need to find replacements. There also may be better prices from a different vendor.
 
