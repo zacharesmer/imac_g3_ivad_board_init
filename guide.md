@@ -2,7 +2,9 @@
 
 This project should work on slot-loading iMac G3s. The earlier tray-loading models have a different video connector, and there is a different (simpler) process to use one of those as a monitor.
 
-This guide is for installing 3 circuit boards, and using an Arduino (ATmega 328) so the iMac can be used as a monitor for any VGA output. If you want to install a raspberry pi in the iMac, it is not necessary to use the Arduino. There are other resources in this repository showing how to set that up.
+This guide is for installing 3 circuit boards, and using an Arduino (ATmega 328) so the iMac can be used as a monitor for any VGA output. If you want to install a raspberry pi in the iMac, it is not necessary to use the Arduino. There are other resources in this repository showing how to set that up. 
+
+This guide does not go into detail about how to use the speakers in the iMac. 
 
 # Ordering parts
 
